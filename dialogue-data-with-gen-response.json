@@ -1,0 +1,17 @@
+[
+    {
+        "input": "Alex:What kind of music do you like?",
+        "response": "Bob: I like pop music.Alex: I like it too.",
+        "model_response": "Bob: I like classical music. Alex: That's cool!"
+    },
+    {
+        "input": "Alex:What is your favorite movie?",
+        "response": "Bob: I like action movies.Alex: Action movies are exciting.",
+        "model_response": "Bob: I love movies. Alex: That's cool!"
+    },
+    {
+        "input": "Alex:Do you have any pets?",
+        "response": "Bob: Yes, I have a cat.Alex: Cats are cute.",
+        "model_response": "Bob: Yes, I have a cat. Alex: That's cool!"
+    }
+]

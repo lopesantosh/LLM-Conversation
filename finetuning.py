@@ -208,6 +208,8 @@ def main(test_mode=False):
     #######################################
     # Finetuning the model
     #######################################
+    num_epochs = 10
+    
     print("Initial losses")
     with torch.no_grad():
         train_loss = calc_loss_loader(train_loader, model, device, num_batches=2)
@@ -218,8 +220,8 @@ def main(test_mode=False):
 
     # use adamw optimizer, learning weight and weight decay
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.00005, weight_decay=0.1)
-    num_epochs = 4
 
+    # training loops
     train_losses, val_losses, tokens_seen = train_model_simple(model, train_loader, val_loader, optimizer, device,                       num_epochs=num_epochs, eval_freq=2, eval_iter=5, start_context=format_input(val_data[0]), tokenizer=tokenizer
                                                               )
     print(50*"-")
@@ -227,33 +229,45 @@ def main(test_mode=False):
     #######################################
     # Evaluating and Saving results
     #######################################
-    print("Generating responses")
+    print("Generating conversational responses")
     
     result = [None] * len(val_data)
     for i, entry in tqdm(enumerate(val_data), total=len(val_data)):
         result[i] = {}
+        
         s = re.split(r'Alex|Bob', entry)
-        bob_response = s[2][4:-4]
-        alex_response= s[3][4:-1]
+        alex_input = f"Alex:{s[1][4:-4]}"
+        bob_response = f"Bob: {s[2][4:-4]}"
+        alex_response= f"Alex: {s[3][4:-1]}"
         true_response = bob_response + alex_response
-        result[i]["response"] = true_response
+        
         
         input_text = format_input(entry)
         token_ids = generate(model=model,
                              idx=text_to_token_ids(input_text, tokenizer).to(device),
-                             max_new_tokens=35,
+                             max_new_tokens=50,
                              context_size=BASE_CONFIG["context_length"],
                              eos_id=50256
                             )
+        
+        # generate returns combined input and output. extract the output response
         generated_text = token_ids_to_text(token_ids, tokenizer)
-        genrated_response = generated_text[len(input_text):].replace("### Response:", "").strip()
+        s = generated_text[len(input_text):].replace("###", "").strip()
+        s = s.split()
+        generated_response = " ".join([item.strip() for item in s])
+        
+        result[i]["input"] = alex_input
+        result[i]["response"] = true_response
+        result[i]["model_response"] = generated_response
+        
+        print(alex_input)
+        print('True Response: {0}'.format(true_response))
+        print('Generated Response: {0}'.format(generated_response))
+        print()
+        
 
-        result[i]["model_response"] = genrated_response
-
-    val_data_path = "dialogue-data-with-response.json"
-    with open(val_data_path, "w") as file:
-        json.dump(val_data, file, indent=4)  # "indent" for pretty-printing
-    print(f"Responses saved as {val_data_path}")
+    with open("dialogue-data-with-gen-response.json", "w") as file:
+        json.dump(result, file, indent=4)  # "indent" for pretty-printing
 
 
 if __name__ == '__main__':
