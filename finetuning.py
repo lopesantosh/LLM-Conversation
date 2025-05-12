@@ -236,8 +236,8 @@ def main(test_mode=False):
         result[i] = {}
         
         s = re.split(r'Alex|Bob', entry)
-        alex_input = f"Alex:{s[1][4:-4]}"
-        bob_response = f"Bob: {s[2][4:-4]}"
+        alex_input = f"Alex: {s[1][4:-4]}"
+        bob_response = f"Bob: {s[2][4:-4]} "
         alex_response= f"Alex: {s[3][4:-1]}"
         true_response = bob_response + alex_response
         
