@@ -21,6 +21,7 @@ I chose the GPT-2 (355 million parameters) model due to its relatively simple ar
 For model, one need to specify the choice of the model, dierctory's path to the model. 
 
 model_name - "gpt2-medium" or "gpt2-large" or "gpt2-xl"
+
 Model path - "model_path" where the speciied model would be locally stored. 
 
 
