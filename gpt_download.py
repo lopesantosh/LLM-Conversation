@@ -1,26 +1,26 @@
 import os
 import urllib.request
-import json
-import numpy as np
-import tensorflow as tf
 from tqdm import tqdm
 
 
-def download_and_load_gpt2(model_size, models_dir):
+def download_gpt2(model_size, model_dir):
+    
     # validate model size
     allowed_sizes = ("124M", "355M", "774M", "1558M")
     if model_size not in allowed_sizes:
         raise ValueError(f"Model size not in {allowed_sizes}")
 
     # define paths
-    model_dir = os.path.join(models_dir, model_size)
+    model_dir = os.path.join(model_dir, model_size)
     base_url = "https://openaipublic.blob.core.windows.net/gpt-2/models"
     backup_base_url = "https://f001.backblazeb2.com/file/LLMs-from-scratch/gpt2"
-    filenames = [
-        "checkpoint", "encoder.json", "hparams.json",
-        "model.ckpt.data-00000-of-00001", "model.ckpt.index",
-        "model.ckpt.meta", "vocab.bpe"
-    ]
+    filenames = ["checkpoint", 
+                 "encoder.json", 
+                 "hparams.json",
+                 "model.ckpt.data-00000-of-00001", 
+                 "model.ckpt.index",
+                 "model.ckpt.meta", 
+                 "vocab.bpe"]
 
     # download files
     os.makedirs(model_dir, exist_ok=True)
@@ -30,12 +30,7 @@ def download_and_load_gpt2(model_size, models_dir):
         file_path = os.path.join(model_dir, filename)
         download_file(file_url, file_path, backup_url)
 
-    # load settings and params
-    tf_ckpt_path = tf.train.latest_checkpoint(model_dir)
-    settings = json.load(open(os.path.join(model_dir, "hparams.json"), "r", encoding="utf-8"))
-    params = load_gpt2_params_from_tf_ckpt(tf_ckpt_path, settings)
-
-    return settings, params
+    return
 
 
 def download_file(url, destination, backup_url=None):
@@ -89,31 +84,7 @@ def download_file(url, destination, backup_url=None):
         print(f"An unexpected error occurred: {e}")
 
 
-
-def load_gpt2_params_from_tf_ckpt(ckpt_path, settings):
-    # initialize parameters dictionary with empty blocks for each layer
-    params = {"blocks": [{} for _ in range(settings["n_layer"])]}
-
-    # iterate over each variable in the checkpoint
-    for name, _ in tf.train.list_variables(ckpt_path):
-        #load the variable and remove singleton dimensions
-        variable_array = np.squeeze(tf.train.load_variable(ckpt_path, name))
-
-        # process the variable name to extract relevant parts
-        variable_name_parts = name.split("/")[1:]  # skip the 'model/' prefix
-
-        # identify the target dictionary for the variable
-        target_dict = params
-        if variable_name_parts[0].startswith("h"):
-            layer_number = int(variable_name_parts[0][1:])
-            target_dict = params["blocks"][layer_number]
-
-        # recursively access or create nested dictionaries
-        for key in variable_name_parts[1:-1]:
-            target_dict = target_dict.setdefault(key, {})
-
-        # assign the variable array to the last key
-        last_key = variable_name_parts[-1]
-        target_dict[last_key] = variable_array
-
-    return params
+if __name__ == "__main__":
+    model_size = "355M"
+    model_dir = "/Users/santosh/Documents/workspace/models/gpt2"
+    download_gpt2(model_size, model_dir)
