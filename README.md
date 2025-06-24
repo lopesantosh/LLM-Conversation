@@ -15,6 +15,15 @@ To create a batching process for training, It implements a custom collate functi
 
 I divided the dialogue dataset into training and validation sets, using a 70-30 split. Subsequently, I implemented a DialogueDataset class and applied data loaders to both the training and validation sets, which are necessary for large language model (LLM) fine-tuning and evaluation.
 
+# Model
+I chose the GPT-2 (355 million parameters) model due to its relatively simple architecture compared to other transformer architectures. As a decoder-style autoregressive model, it incorporates its previous outputs as inputs to predict the next word sequentially, making it ideal for text generation and conversational tasks. 
+
+For model, one need to specify the choice of the model, dierctory's path to the model. 
+
+model_name - "gpt2-medium" or "gpt2-large" or "gpt2-xl"
+Model path - "model_path" where the speciied model would be locally stored. 
+
+
 # Requirements
 All the required python packages could be installed using pip install -r requirements.txt
 
