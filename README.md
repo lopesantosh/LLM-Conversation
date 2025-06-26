@@ -1,6 +1,9 @@
-# Finetune a Large language Model for Text Conversation Between Two People
+# Large language Model for Text Conversation Between Two People
 
-This repository contains the code for developing and finetuning a GPT-like Large Language Model (LLM) for text conversation between two people. 
+# Introduction
+The repository contains lot of classes that closely reflect our concepts of large language model. They work together to allow us to build applications elegantly, with minimal effort, with adequate performanc, and with the confidence that results produced are correct. In particular,this repository can be used to finetune a GPT-like Large Language Model (LLM) for follwoing tasks:
+1. For text conversation between two people.
+2. Instruction finetuning
 
 # Conversation Data Preparation
 The datasets contain 10 entries, each presenting a conversation dialogue between two people. I have formatted each entry in a prompt-style format.
