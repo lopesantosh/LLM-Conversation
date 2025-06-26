@@ -1,7 +1,7 @@
 # Large language Model for Text Conversation Between Two People
 
 # Introduction
-The repository contains lot of classes that closely reflect our concepts of large language model. They work together to allow us to build applications elegantly, with minimal effort, with adequate performanc, and with the confidence that results produced are correct. In particular,this repository can be used to finetune a GPT-like Large Language Model (LLM) for follwoing tasks:
+The repository contains lot of classes that closely reflect our concepts of large language model. They work together to allow us to build applications elegantly, with minimal effort, with adequate performanc, and with the confidence that results produced are correct. In particular,this repository can be used to finetune a GPT-like Large Language Model (LLM) for following tasks:
 1. For text conversation between two people.
 2. Instruction finetuning
 
